@@ -61,7 +61,7 @@
         methods: {
             initWebSocket() {
                 this.connection();
-                let self = this;
+                /*let self = this;
                 // 断开重连机制,尝试发送消息,捕获异常发生时重连
                 this.timer = setInterval(() => {
                     try {
@@ -70,28 +70,30 @@
                         console.log("断线了: " + err);
                         self.connection();
                     }
-                }, 5000);
+                }, 5000);*/
             },
             removeTab(targetName) {
                 console.log(targetName)
             },
             connection() {
                 // 建立连接对象
-                this.socket = new SockJS('http://xxxxxx:8089/ws');//连接服务端提供的通信接口，连接以后才可以订阅广播消息和个人消息
-                // 获取STOMP子协议的客户端对象
+                this.socket = new SockJS('http://192.168.38.65:8000/websocket');//连接服务端提供的通信接口，连接以后才可以订阅广播消息和个人消息
+                // 获取STOMP子协议的客户端对
                 this.stompClient = Stomp.over(this.socket);
                 // 定义客户端的认证信息,按需求配置
-                var headers = {
-                    login: 'mylogin',
-                    passcode: 'mypasscode',
+                /*var headers = {
+                    'Upgrade': 'websocket',
+                    'Connection': 'Upgrade'
                     // additional header
-                    'client-id': 'my-client-id'
-                };
+                    //'client-id': 'my-client192.168.38.65-id'
+                };*/
                 // 向服务器发起websocket连接
-                this.stompClient.connect(headers, () => {
-                    this.stompClient.subscribe('/topic/chat_msg', (msg) => { // 订阅服务端提供的某个topic
+                this.stompClient.connect({}, (frame) => {
+                        console.log('websocket连接成功:' + frame);
+                        this.$message('websocket服务器连接成功');
+                    /*this.stompClient.subscribe('/topic/chat_msg', (msg) => { // 订阅服务端提供的某个topic
                         console.log(msg.body);  // msg.body存放的是服务端发送给我们的信息
-                    });
+                    });*/
                 }, (err) => {
                     // 连接发生错误时的处理函数
                     console.log(err);
